@@ -64,7 +64,6 @@ func routes() {
 }
 
 func main() {
-	connect_db()
 	routes()
 
 	defer db.Close()
