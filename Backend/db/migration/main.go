@@ -16,17 +16,17 @@ func main() {
 	_, err = db.Exec(`
 	CREATE TABLE IF NOT EXISTS users (
     id integer not null primary key AUTOINCREMENT,
-    nama varchar(255) not null,
-	email varchar(255) not null,
+    username varchar(255) not null,
     password varchar(255) not null
 );
 
-INSERT INTO users(nama, email, password) VALUES
-    ('aditira', 'adit@gmail.com', 'adit@'),
-    ('dina', 'dina@gmail.com', 'employee'),
-    ('dito', 'dito@gmail.com', 'employee');`)
+INSERT INTO users (username, password) VALUES
+    ('aditira', '1234'),
+    ('dina', '4321'),
+    ('dito', '2552');`)
 
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 }

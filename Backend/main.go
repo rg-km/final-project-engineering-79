@@ -1,31 +1,27 @@
 package main
 
 import (
-	"log"
+	"database/sql"
 	"usedbooks/backend/api"
 	"usedbooks/backend/repository"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	err := api.ConnectDatabase()
-	checkErr(err)
-	r := gin.Default()
-
-	// API v1
-	v1 := r.Group("/api/v1")
-	{
-		v1.POST("users", repository.AddUsers)
-	}
-
-	// By default it serves on :8080 unless a
-	// PORT environment variable was defined.
-	r.Run()
-}
-
-func checkErr(err error) {
+	db, err := sql.Open("sqlite3", "./db/usedbooks.db")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
+
+	//dependency
+	userRepository := repository.NewUserRepository(db)
+	userHandler := api.NewUserHandler(userRepository)
+
+	router := gin.Default()
+	router.POST("/register", userHandler.PostUserRegist)
+	router.GET("/users", userHandler.GetUsers)
+
+	router.Run()
 }
