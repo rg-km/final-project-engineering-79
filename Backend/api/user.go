@@ -16,6 +16,8 @@ type userHandler struct {
 type UserResponse struct {
 	ID       int    `json:"id"`
 	Username string `json:"username"`
+	Email    string `json:"email"`
+	Nohp     string `json:"nohp"`
 	Password string `json:"password"`
 }
 
@@ -73,6 +75,8 @@ func convertToUserResponse(h repository.User) UserResponse {
 	return UserResponse{
 		ID:       h.ID,
 		Username: h.Username,
+		Email:    h.Email,
+		Nohp:     h.Nohp,
 		Password: h.Password,
 	}
 }
