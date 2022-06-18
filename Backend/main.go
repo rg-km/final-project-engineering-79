@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"usedbooks/backend/api"
-	"usedbooks/backend/repository"
+	"usedbooks/Backend/api"
+	"usedbooks/Backend/repository"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"

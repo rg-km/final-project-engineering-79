@@ -14,3 +14,10 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type Product struct {
+	ID          int
+	ProductName string
+	Desc        string
+	Price       int
+}
