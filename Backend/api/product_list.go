@@ -20,7 +20,7 @@ type ProductSuccessResponse struct {
 	Products []Product `json:"products"`
 }
 
-func (api *API) getProductCategory(w http.ResponseWriter, req *http.Request) {
+func (api *API) getProductByName(w http.ResponseWriter, req *http.Request) {
 	api.AllowOrigin(w, req)
 	product_name, err := api.productsRepo.FetchProductByName() // still red
 	encoder := json.NewEncoder(w)
