@@ -19,11 +19,13 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	userHandler := api.NewUserHandler(userRepository)
 	authHandler := api.NewAuthHandler(userRepository)
+	// productRepository := api.NewProductRepository(db)
 
 	router := gin.Default()
 	router.POST("/register", userHandler.PostUserRegist)
 	router.POST("/login", authHandler.LoginUser)
 	router.GET("/users", userHandler.GetUsers)
+	// router.GET("/products", productRepository.FetchProducts)
 
 	router.Run()
 }
