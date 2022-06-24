@@ -31,6 +31,7 @@ func main() {
 	//product
 	router.POST("/insertProduct", productHandler.CreateProduct)
 	router.GET("/listProduct", productHandler.GetProducts)
+	router.GET("/detailProduct/:id", productHandler.GetProduct)
 
 	router.Run()
 }
