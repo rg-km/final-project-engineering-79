@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"usedbooks/Backend/repository"
 	"usedbooks/backend/api"
-	"usedbooks/backend/repository"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,10 +20,17 @@ func main() {
 	userHandler := api.NewUserHandler(userRepository)
 	authHandler := api.NewAuthHandler(userRepository)
 
+	productRepository := repository.NewProductRepository(db)
+	productHandler := api.NewProductHandler(productRepository)
+
 	router := gin.Default()
 	router.POST("/register", userHandler.PostUserRegist)
 	router.POST("/login", authHandler.LoginUser)
 	router.GET("/users", userHandler.GetUsers)
+
+	//product
+	router.POST("/insertProduct", productHandler.CreateProduct)
+	router.GET("/listProduct", productHandler.GetProducts)
 
 	router.Run()
 }
