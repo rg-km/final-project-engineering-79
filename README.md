@@ -1,9 +1,10 @@
-﻿# final-project-engineering-79
+# final-project-engineering-79
 
-#SISTEM INFORMASI E-SUPPORT
+#E-Commerce Buku Pendidikan Bekas Berkualitas dengan Harga Terjangkau
 
-Sebuah aplikasi berbasis web yang memudahkan pelaksanaan pembelajaran secara Digital bagi anak tuna netra.
+Sebuah aplikasi berbasis web yang memudahkan pembeli menemukan buku pendidikan yang masih layak dan berkualitas dengan harga terjangkau
 
 ## fitur-fiturnya
-- materi pembelajaran
-- latihan atau tugas pembelajaran
+- Main Page sebagai informasi-informasi singkat dan juga preview beberapa buku
+- Keranjang untuk menyimpan sementara barang-barang yang ingin dibeli
+- Detail barang, untuk melihat isi buku
