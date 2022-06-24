@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"usedbooks/Backend/repository"
 
 	"github.com/gin-gonic/gin"
@@ -42,6 +43,22 @@ func (h *productHandler) GetProducts(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": productsResponse,
+	})
+}
+
+func (h *productHandler) GetProduct(c *gin.Context) {
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	product, err := h.productService.FindProductByID(int(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": product,
 	})
 }
 
