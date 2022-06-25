@@ -48,6 +48,8 @@ func main() {
 	//wishlist
 	router.POST("/insertWishlist", wishlistHandler.CreateWishlist)
 	router.GET("/listWishlist", wishlistHandler.GetWishlists)
+	router.DELETE("/deleteWishlist/:id", wishlistHandler.DeleteWishlist)
+	router.PUT("/updateWishlist/:id", wishlistHandler.UpdateWishlist)
 
 	router.Run()
 }
