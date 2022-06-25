@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"usedbooks/Backend/repository"
 
 	"github.com/gin-gonic/gin"
@@ -69,6 +70,54 @@ func (h *wishlistHandler) CreateWishlist(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"data": res,
 	})
+}
+
+func (h *wishlistHandler) DeleteWishlist(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": "Invalid ID",
+		})
+	}
+	res, err := h.wishlistService.DeleteWishlistByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data":    res,
+		"message": "Wishlist deleted successfully",
+	})
+}
+
+func (h *wishlistHandler) UpdateWishlist(c *gin.Context) {
+	var json repository.Wishlist
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err.Error(),
+		})
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": "Invalid ID",
+		})
+	}
+
+	success, err := h.wishlistService.UpdatedWishlist(json, id)
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Sucess Updated",
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Errors": err,
+		})
+	}
 }
 
 func convertToWishlistResponse(h repository.Wishlist) WishlistResponse {

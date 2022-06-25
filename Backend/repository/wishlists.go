@@ -8,6 +8,8 @@ import (
 type WRepository interface {
 	FetchWishlist() ([]Wishlist, error)
 	InsertWishlist(wishlistRequest WishlistRequest) (Wishlist, error) //untuk insert data user ke db
+	DeleteWishlistByID(ID int) (bool, error)
+	UpdatedWishlist(wishlist Wishlist, id int) (bool, error)
 }
 
 type WishlistRepository struct {
