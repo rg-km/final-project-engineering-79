@@ -9,6 +9,7 @@ type CRepository interface {
 	FetchCart() ([]Cartlist, error)
 	InsertCart(cartRequest CartRequest) (Cart, error) //untuk insert data user ke db
 	DeleteCartByID(ID int) (bool, error)
+	UpdatedCart(cart Cart, id int) (bool, error)
 }
 
 type CartRepository struct {
@@ -86,6 +87,26 @@ func (c *CartRepository) DeleteCartByID(ID int) (bool, error) {
 	defer res.Close()
 
 	_, err = res.Exec(ID)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (c *CartRepository) UpdatedCart(cart Cart, id int) (bool, error) {
+	sqlStatement := `UPDATE cart_item SET product_id = ?, quantity = ? WHERE id = ?`
+
+	res, err := c.db.Prepare(sqlStatement)
+
+	if err != nil {
+		return false, err
+	}
+
+	defer res.Close()
+
+	_, err = res.Exec(cart.ProductID, cart.Quantity, cart.ID)
+
 	if err != nil {
 		return false, err
 	}
