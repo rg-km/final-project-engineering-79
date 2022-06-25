@@ -26,6 +26,9 @@ func main() {
 	cartRepository := repository.NewCartRepository(db)
 	cartHandler := api.NewCartHandler(cartRepository)
 
+	wishlistRepository := repository.NewWishlistRepository(db)
+	wishlistHandler := api.NewWishlistHandler(wishlistRepository)
+
 	router := gin.Default()
 	router.POST("/register", userHandler.PostUserRegist)
 	router.POST("/login", authHandler.LoginUser)
@@ -41,6 +44,10 @@ func main() {
 	router.GET("/listCarts", cartHandler.GetCarts)
 	router.DELETE("/deleteCart/:id", cartHandler.DeleteCart)
 	router.PUT("/updateCart/:id", cartHandler.UpdateCart)
+
+	//wishlist
+	router.POST("/insertWishlist", wishlistHandler.CreateWishlist)
+	router.GET("/listWishlist", wishlistHandler.GetWishlists)
 
 	router.Run()
 }
