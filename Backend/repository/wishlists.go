@@ -68,3 +68,41 @@ func (w *WishlistRepository) InsertWishlist(wishlistRequest WishlistRequest) (Wi
 	}
 	return newWishlist, nil
 }
+
+func (w *WishlistRepository) DeleteWishlistByID(ID int) (bool, error) {
+	sqlStatement := `DELETE FROM wishlist_item WHERE id = ?`
+
+	res, err := w.db.Prepare(sqlStatement)
+
+	if err != nil {
+		return false, err
+	}
+	defer res.Close()
+
+	_, err = res.Exec(ID)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (w *WishlistRepository) UpdatedWishlist(wishlist Wishlist, id int) (bool, error) {
+	sqlStatement := `UPDATE wishlist_item SET product_id = ? WHERE id = ?`
+
+	res, err := w.db.Prepare(sqlStatement)
+
+	if err != nil {
+		return false, err
+	}
+
+	defer res.Close()
+
+	_, err = res.Exec(wishlist.ProductID, wishlist.ID)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
