@@ -93,6 +93,30 @@ func (h *cartHandler) DeleteCart(c *gin.Context) {
 	})
 }
 
+func (h *cartHandler) UpdateCart(c *gin.Context) {
+	var json repository.Cart
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+	}
+
+	success, err := h.cartService.UpdatedCart(json, id)
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Success Updated",
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": err})
+	}
+}
+
 func convertToCartResponse(h repository.Cartlist) CartResponse {
 	return CartResponse{
 		ID:           h.ID,

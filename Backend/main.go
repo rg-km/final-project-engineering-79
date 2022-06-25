@@ -40,6 +40,7 @@ func main() {
 	router.POST("/insertCart", cartHandler.CreateCart)
 	router.GET("/listCarts", cartHandler.GetCarts)
 	router.DELETE("/deleteCart/:id", cartHandler.DeleteCart)
+	router.PUT("/updateCart/:id", cartHandler.UpdateCart)
 
 	router.Run()
 }
