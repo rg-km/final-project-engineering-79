@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type WRepository interface {
@@ -45,5 +46,25 @@ func (w *WishlistRepository) FetchWishlist() ([]Wishlist, error) {
 }
 
 func (w *WishlistRepository) InsertWishlist(wishlistRequest WishlistRequest) (Wishlist, error) {
+	sqlStatement := `INSERT INTO wishlist_item (product_id) VALUES (?)`
 
+	res, err := w.db.Prepare(sqlStatement)
+
+	if err != nil {
+		return Wishlist{}, err
+	}
+	defer res.Close()
+
+	newRes, err := res.Exec(
+		wishlistRequest.ProductID,
+	)
+
+	fmt.Println("success", newRes)
+	newWishlist := Wishlist{
+		ProductID: wishlistRequest.ProductID,
+	}
+	if err != nil {
+		return Wishlist{}, err
+	}
+	return newWishlist, nil
 }
