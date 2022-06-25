@@ -22,3 +22,18 @@ type Product struct {
 	Price       int
 	Image       string
 }
+
+type Cart struct {
+	ID        int
+	ProductID int
+	Quantity  int
+}
+
+type Cartlist struct {
+	ID           int
+	ProductID    int
+	ProductName  string
+	ProductPrice int
+	ProductImage string
+	Quantity     int
+}

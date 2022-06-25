@@ -15,3 +15,8 @@ type ProductRequest struct {
 	Price       int    `json:"price" binding:"required"`
 	Image       string `json:"image" binding:"required"`
 }
+
+type CartRequest struct {
+	ProductID int `json:"product_id" binding:"required"`
+	Quantity  int `json:"quantity" binding:"required"`
+}
