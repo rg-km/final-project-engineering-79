@@ -6,6 +6,7 @@ import (
 
 type WRepository interface {
 	FetchWishlist() ([]Wishlist, error)
+	InsertWishlist(wishlistRequest WishlistRequest) (Wishlist, error) //untuk insert data user ke db
 }
 
 type WishlistRepository struct {
@@ -41,4 +42,8 @@ func (w *WishlistRepository) FetchWishlist() ([]Wishlist, error) {
 		wishlists = append(wishlists, w)
 	}
 	return wishlists, nil
+}
+
+func (w *WishlistRepository) InsertWishlist(wishlistRequest WishlistRequest) (Wishlist, error) {
+
 }
