@@ -25,6 +25,26 @@ func NewWishlistHandler(wishlistRepository repository.WRepository) *wishlistHand
 	return &wishlistHandler{wishlistRepository}
 }
 
+func (h *wishlistHandler) GetWishlists(c *gin.Context) {
+	wishlists, err := h.wishlistService.FetchWishlist()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+	var wishlistsResponse []WishlistResponse
+
+	for _, v := range wishlists {
+		wishlistResponse := convertToWishlistResponse(v)
+
+		wishlistsResponse = append(wishlistsResponse, wishlistResponse)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": wishlistsResponse,
+	})
+}
+
 func (h *wishlistHandler) CreateWishlist(c *gin.Context) {
 	var wishlistRequest repository.WishlistRequest
 
@@ -49,4 +69,14 @@ func (h *wishlistHandler) CreateWishlist(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"data": res,
 	})
+}
+
+func convertToWishlistResponse(h repository.Wishlist) WishlistResponse {
+	return WishlistResponse{
+		ID:           h.ID,
+		ProductID:    h.ProductID,
+		ProductName:  h.ProductName,
+		ProductPrice: h.ProductPrice,
+		ProductImage: h.ProductImage,
+	}
 }
