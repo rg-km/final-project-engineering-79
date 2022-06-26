@@ -120,6 +120,10 @@ INSERT INTO users (username, email, nohp, password, role) VALUES
 	(1, 3),
 	(2, 3);
 
+	INSERT INTO wishlist_item(product_id) VALUES
+	(1),
+	(2);
+
 `)
 
 	if err != nil {
