@@ -43,8 +43,12 @@ func main() {
 	router.PUT("/updateCart/:id", cartHandler.UpdateCart)
 
 	router.Run()
-	userRepo := repository.NewUserRepository(db)
+	// userRepo := repository.NewUserRepository(db)
 
-	mainAPI := api.NewAPI(*userRepo)
+	mainAPI := api.NewAPI(*userRepository)
 	mainAPI.Start()
 }
+
+// karena implementasi middleware belum sepenuhnya selesai, jadi middleware baru diterapak di endpoint login
+//untuk mengujinya sebelum menjalankan server terlebih dahulu non aktifkan/ beri tanda komentar di bagian code dari line 20 - line 45
+//setelah itu baru jalankan file main nya.. dan uji endpoint login menggunakan postman
