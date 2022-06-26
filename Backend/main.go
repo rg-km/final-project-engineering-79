@@ -15,10 +15,10 @@ func main() {
 		panic(err)
 	}
 
-	//dependency
-	userRepository := repository.NewUserRepository(db)
-	userHandler := api.NewUserHandler(userRepository)
-	authHandler := api.NewAuthHandler(userRepository)
+	// //dependency
+	// userRepository := repository.NewUserRepository(db)
+	// userHandler := api.NewUserHandler(userRepository)
+	// authHandler := api.NewAuthHandler(userRepository)
 
 	productRepository := repository.NewProductRepository(db)
 	productHandler := api.NewProductHandler(productRepository)
@@ -27,9 +27,9 @@ func main() {
 	cartHandler := api.NewCartHandler(cartRepository)
 
 	router := gin.Default()
-	router.POST("/register", userHandler.PostUserRegist)
-	router.POST("/login", authHandler.LoginUser)
-	router.GET("/users", userHandler.GetUsers)
+	// router.POST("/register", userHandler.PostUserRegist)
+	// router.POST("/login", authHandler.LoginUser)
+	// router.GET("/users", userHandler.GetUsers)
 
 	//product
 	router.POST("/insertProduct", productHandler.CreateProduct)
@@ -43,4 +43,8 @@ func main() {
 	router.PUT("/updateCart/:id", cartHandler.UpdateCart)
 
 	router.Run()
+	userRepo := repository.NewUserRepository(db)
+
+	mainAPI := api.NewAPI(*userRepo)
+	mainAPI.Start()
 }
