@@ -16,8 +16,8 @@ func main() {
 	}
 
 	// //dependency
-	// userRepository := repository.NewUserRepository(db)
-	// userHandler := api.NewUserHandler(userRepository)
+	userRepository := repository.NewUserRepository(db)
+	userHandler := api.NewUserHandler(userRepository)
 	// authHandler := api.NewAuthHandler(userRepository)
 
 	productRepository := repository.NewProductRepository(db)
@@ -27,7 +27,7 @@ func main() {
 	cartHandler := api.NewCartHandler(cartRepository)
 
 	router := gin.Default()
-	// router.POST("/register", userHandler.PostUserRegist)
+	router.POST("/register", userHandler.PostUserRegist)
 	// router.POST("/login", authHandler.LoginUser)
 	// router.GET("/users", userHandler.GetUsers)
 
