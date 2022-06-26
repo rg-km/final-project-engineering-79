@@ -67,6 +67,12 @@ func main() {
 		
 );
 
+	CREATE TABLE IF NOT EXISTS wishlist_item (
+		id integer not null primary key AUTOINCREMENT,
+		product_id int not nul
+		FOREIGN KEY (product_id) REFERENCES product(id)
+	);
+
 	CREATE TABLE IF NOT EXISTS shoping_session (
 		id integer not null primary key AUTOINCREMENT,
 		user_id int not null,
