@@ -37,3 +37,11 @@ type Cartlist struct {
 	ProductImage string
 	Quantity     int
 }
+
+type Wishlist struct {
+	ID           int
+	ProductID    int
+	ProductName  string
+	ProductPrice int
+	ProductImage string
+}
