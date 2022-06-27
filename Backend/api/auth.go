@@ -1,29 +1,20 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
-	"usedbooks/Backend/repository"
 
-	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type authHandler struct {
-	userRepo repository.Repository
-}
-
-func NewAuthHandler(usersRepository repository.Repository) *authHandler {
-	return &authHandler{usersRepository}
-}
-
 type User struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-type LoginResponse struct {
-	Email string `json:"email`
+type LoginSuccessResponse struct {
+	Email string `json:"email"`
 	Token string `json:"token"`
 }
 
@@ -31,60 +22,93 @@ type AuthErrorResponse struct {
 	Error string `json:"error"`
 }
 
-//jwt key fo signature
-var jwtKey = []byte("secret")
+// Jwt key yang akan dipakai untuk membuat signature
+var jwtKey = []byte("key")
 
+// Struct claim digunakan sebagai object yang akan di encode oleh jwt
+// jwt.StandardClaims ditambahkan sebagai embedded type untuk provide standart claim yang biasanya ada pada JWT
 type Claims struct {
 	Email string
-	Role  string
 	jwt.StandardClaims
 }
 
-func (h *authHandler) LoginUser(c *gin.Context) {
-
+func (api *API) login(w http.ResponseWriter, req *http.Request) {
+	api.AllowOrigin(w, req)
 	var user User
-
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	res, err := h.userRepo.LoginUser(user.Email, user.Password)
-	c.Header("Content-Type", "application/json")
+	err := json.NewDecoder(req.Body).Decode(&user)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	res, err := api.usersRepo.LoginUser(user.Email, user.Password)
+
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		encoder.Encode(AuthErrorResponse{Error: err.Error()})
+		return
+	}
+
+	// Deklarasi expiry time untuk token jwt
 	expirationTime := time.Now().Add(60 * time.Minute)
+
+	// Buat claim menggunakan variable yang sudah didefinisikan diatas
 	claims := &Claims{
 		Email: *res,
 		StandardClaims: jwt.StandardClaims{
+			// expiry time menggunakan time millisecond
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
-	//encode claim
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	// Buat jwt string dari token yang sudah dibuat menggunakan JWT key yang telah dideklarasikan
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error()})
+		// return internal error ketika ada kesalahan ketika pembuatan JWT string
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	http.SetCookie(c.Writer, &http.Cookie{
+	// Set token string kedalam cookie response
+	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,
 		Path:    "/",
 	})
-	c.JSON(http.StatusOK, gin.H{
-		"data": LoginResponse{
-			Email: *res,
-			Token: tokenString,
-		},
-	})
+
+	json.NewEncoder(w).Encode(LoginSuccessResponse{Email: *res, Token: tokenString})
+}
+
+func (api *API) logout(w http.ResponseWriter, req *http.Request) {
+	api.AllowOrigin(w, req)
+
+	token, err := req.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			// return unauthorized ketika token kosong
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// return bad request ketika field token tidak ada
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if token.Value == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	c := http.Cookie{
+		Name:   "token",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, &c)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("logged out"))
 }

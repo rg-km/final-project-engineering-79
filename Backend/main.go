@@ -15,10 +15,10 @@ func main() {
 		panic(err)
 	}
 
-	//dependency
+	// //dependency
 	userRepository := repository.NewUserRepository(db)
 	userHandler := api.NewUserHandler(userRepository)
-	authHandler := api.NewAuthHandler(userRepository)
+	// authHandler := api.NewAuthHandler(userRepository)
 
 	productRepository := repository.NewProductRepository(db)
 	productHandler := api.NewProductHandler(productRepository)
@@ -31,8 +31,8 @@ func main() {
 
 	router := gin.Default()
 	router.POST("/register", userHandler.PostUserRegist)
-	router.POST("/login", authHandler.LoginUser)
-	router.GET("/users", userHandler.GetUsers)
+	// router.POST("/login", authHandler.LoginUser)
+	// router.GET("/users", userHandler.GetUsers)
 
 	//product
 	router.POST("/insertProduct", productHandler.CreateProduct)
@@ -52,4 +52,12 @@ func main() {
 	router.PUT("/updateWishlist/:id", wishlistHandler.UpdateWishlist)
 
 	router.Run()
+	// userRepo := repository.NewUserRepository(db)
+
+	mainAPI := api.NewAPI(*userRepository)
+	mainAPI.Start()
 }
+
+// karena implementasi middleware belum sepenuhnya selesai, jadi middleware baru diterapak di endpoint login
+//untuk mengujinya sebelum menjalankan server terlebih dahulu non aktifkan/ beri tanda komentar di bagian code dari line 20 - line 45
+//setelah itu baru jalankan file main nya.. dan uji endpoint login menggunakan postman
