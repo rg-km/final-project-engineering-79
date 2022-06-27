@@ -1,9 +1,11 @@
 import Link from 'react';
 import React from 'react';
+import Navbar from './Navbar';
 
 function Favorit() {
 	return (
-        <div className="antialiased flex h-screen justify-center items-center bg-book">
+        <div className="antialiased flex flex-col h-screen justify-center items-center bg-book">
+            <Navbar />
             <div className="grid grid-cols-4 gap-24 my-10">
                 {/* CRAZY LOVE */}
                 <div className="border-2 rounded-xl items-center bg-white px-10 py-5 gap-6">
